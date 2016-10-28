@@ -65,7 +65,7 @@ from .unicode import memes
 # UDNUDNDUNDUNDUNDUDNUDNUDNDU ND UNUNDU NDU NDUDUNDUNDUNDUNDUNDUNDUDNUUN
 # *guitar intensifies*
 # yes yes yes yes 
-#I did this in RTB...fucking hell. whatever lol
+#I did this in RTB... hell. whatever lol
 #merlin is a retard
 #watch him burn his house down
 #-everyone
@@ -82,7 +82,7 @@ default_status = discord.Status.dnd
 # Date vars
 halloween = date(2016, 10, 31)
 
-# The fucking changelog var
+# The changelog var
 change_log = [
     "Commands:",
     "+ roleinfo",
@@ -95,7 +95,7 @@ change_log = [
     "Nothing!"
 ]
 # String vars
-owner_id = "169597963507728384"
+owner_id = "150719058868699137"
 no_perm = "You do not have permission to use that command."
 
 # Format vars
@@ -149,12 +149,12 @@ dis_games = [
     discord.Game(name="with Abstract"),
 ]
 suicidalmemes = [
-    "what the hell did you do idiot",
+    "what did you do idiot",
     "wtf ok idiot fool",
     "you killed him nice job.",
     "lmao you killed him gg on your killing :ok_hand:",
     "party on his death? lit",
-    "fuckin fag wtf no.... y..."
+    " fag wtf no.... y..."
 ]
 throwaf = [
     "a keyboard",
@@ -164,7 +164,7 @@ throwaf = [
     "furtrash called art",
     "a british trash can",
     "a raincoat made with :heart:",
-    "some shitty pencil, it's definitely useless",
+    "some pencil, it's definitely useless",
     "a dragon",
     "a Lightning Dragon",
     "Maxie",
@@ -173,10 +173,9 @@ throwaf = [
     "water",
     "a shamrock shake",
     "flowers",
-    "some fisting",
     "a RoboNitori message",
     "a ice cream cone",
-    "hot ass pie, and it's strawberry",
+    "hot pie, and it's strawberry",
     "a strawberry ice cream cone",
     "Visual Studio 2015",
     "Toshiba Satellite laptop with Spotify, Guild Wars 2 and Visual Studio on it",
@@ -185,7 +184,6 @@ throwaf = [
     "pomfpomfpomf",
     "??",
     "a watermelone",
-    "FUCKING PAPERCLIP",
     "HTTP Error 403",
     "Error 429",
     "`never`",
@@ -226,7 +224,6 @@ throwaf = [
     "Visual Studio Project",
     "nerd thing",
     "python 3.5 py",
-    "fuckin office tool",
     "clippy",
     "dat boi meme",
     "random.jpeg",
@@ -235,7 +232,6 @@ throwaf = [
     "a Lenovo Keyboard",
     "Life of Pablo",
     "a Mexican called Ambrosio",
-    "the most obvious dick master",
     "Motopuffs",
     "the dick master called Motopuffs",
     "a weeaboo",
@@ -246,29 +242,7 @@ throwaf = [
     "Crescent Rose"
 ]
 insults = [
-    "is a fucking pedophile",
-    "is a nigger",
-    "is so insecure about his penis size because it is smaller than a babies",
-    "is just a fucking sterotypical 12 year old saying shit like \"I fucked your mom\" and other shit",
-    "is a fucking disguisting, disgraceful, ignorant, pathetic, and discriminative weeaboo!",
-    "is a child molester",
-    "has a kink with 80 year old men",
-    "is the type of person who loves to fap to little girls",
-    "has no other purpose in life other than to be retarded and waste people's time",
-    "needs to kill itself",
-    "is the definition of faggot",
-    "has a gamertag, and it is I_Like_To_Rape_Children",
-    "loves to fap to discord bots",
-    "wants the d",
-    "has no life",
-    "is a furry",
-    "is a furfag",
-    "is a worthless piece of shit",
-    "80 year old man",
-    "lost his virginity to his grandpa",
-    "supports abortion",
-    "is a cuntrag",
-    "is on the sex offender list"
+    "is a nub"
 ]
 honkhonkfgt = [
     "https://i.imgur.com/c53XQCI.gif",
@@ -329,11 +303,10 @@ magic_conch_shell = [
     "Very doubtful"
 ]
 triggered = [
-    "Don't fucking ping me ever again",
     ":eyes: **Did you just ping me?** Oh hellll no!",
     "Oh do you wanna see Jesus?",
     "\*Gets pinged then bans pinger*",
-    "**D-D-DID YOU JUST PING ME?** BITCH I'LL BEAT YOUR FUCING ASSSKRFREXE4WV54\n\*TRIGGERED*"
+    "**D-D-DID YOU JUST PING ME?** I'LL BEAT YOU \n\*TRIGGERED*"
 ]
 
 # Regex for IP address
@@ -1459,7 +1432,7 @@ class Ruby(discord.Client):
 
         if not author.voice_channel:
             raise exceptions.CommandError(
-                "Get your lazy good for nothing ass in a voice channel before giving me demands bitch. (AUTHOR_NOT_IN_CHANNEL)")
+                "Get in a voice channel to use summon. (SENDER_NOT_IN_CHANNEL)")
 
         voice_client = self.the_voice_clients.get(channel.server.id, None)
         if voice_client and voice_client.channel.server == author.voice_channel.server:
@@ -1635,7 +1608,7 @@ class Ruby(discord.Client):
 
         except ValueError:
             raise exceptions.CommandError(
-                "{} <-- Really? I know you can do better. It\'s obviously some shameful decimal number, or it\'s not a fucking number. Think harder next time.".format(
+                "{} <-- Really? I know you can do better. It\'s obviously some shameful decimal number, or it\'s not a number. Think harder next time.".format(
                     new_volume), expire_in=20)
 
         if relative:
@@ -1973,7 +1946,7 @@ class Ruby(discord.Client):
         """
         drewisafurry = random.randint(1, 10) #I can't say how MUCH of a furry Drew is. Or known as Printendo
         if message.content[len(self.command_prefix + "rate "):].strip() == "<@163698730866966528>":
-            await self.safe_send_message(message.channel, "I give myself a ***-1/10***, just because.") #But guess what, Emil's a fucking furry IN DENIAL, so that's even worse. Don't worry, at least Drew's sane.
+            await self.safe_send_message(message.channel, "I give myself a ***-1/10***, just because.") #But guess what, Emil's a furry IN DENIAL, so that's even worse. Don't worry, at least Drew's sane.
         elif message.content[len(self.command_prefix + "rate "):].strip() != "<@163698730866966528>":
             await self.safe_send_message(message.channel, "I give `" + message.content[len(self.command_prefix + "rate "):].strip().replace("@everyone", ">insert attempt to tag everyone here").replace("@here", ">attempt to tag online users here") + "` a ***" + drewisafurry + "/10***")
         
@@ -2139,11 +2112,7 @@ class Ruby(discord.Client):
         else:
             return Response("Either \"true\" or \"false\"", delete_after=15)
         await self._manual_delete_check(message)
-
-    async def cmd_rape(self, author):
-        await self.log(":information_source: " + author.name + " just ran the command `/rape`, what the fuck...")
-        return Response(author.mention + " what the actual fuck is wrong with you? Holy shit you need to be fucking taken to a concentration camp! Did you really think " + command_prefix + "rape was going to do something related to rape?")
-
+        
     async def cmd_addrole(self, server, author, message, username, rolename):
         """
         Usage:
@@ -2338,7 +2307,7 @@ class Ruby(discord.Client):
             if not member:
                 raise exceptions.CommandError("Invalid user specified", expire_in=30)
             await self.add_roles(member, furryrole)
-            await self.send_message(message.channel, "FURRY ALERT! " + member.name.upper() + " IS A FURRY! HIDE THE FUCKING CHILDREN!!!!!111!11")
+            await self.send_message(message.channel, "FURRY ALERT! " + member.name.upper() + " IS A FURRY! HIDE THE CHILDREN!!!!!111!11")
         except discord.Forbidden:
             raise exceptions.CommandError("I do not have the \"Manage Roles\" permission or \"Furry\" role is higher than my highest role", expire_in=30)
 
@@ -2353,11 +2322,7 @@ class Ruby(discord.Client):
         return Response("http://niceme.me", delete_after=0)
 
     async def cmd_github(self):
-        return Response("https://github.com/CreeperSeth/RubyRoseBot", delete_after=0)
-
-    async def cmd_kys(self, message, name):
-        WorthlessPieceOfShit = message.content[len(self.command_prefix + "kys "):].strip()
-        return Response(WorthlessPieceOfShit + " you seriously need to go fucking kill yourself you worthless piece of shit!")
+        return Response("https://github.com/rovertdude/PugButt/", delete_after=0)
 
     async def cmd_thehood(self, channel):
         await self.send_typing(channel)
@@ -2482,18 +2447,15 @@ class Ruby(discord.Client):
     async def cmd_suggest(self, message, suggestion):
         await self.send_typing(message.channel)
         await self.send_message(message.channel, "Suggestion sent!")
-        await self.send_message(discord.User(id="169597963507728384"), "New suggestion recieved from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Suggestion: `" + message.content[len(self.command_prefix + "suggest "):].strip() + "`")
-        await self.send_message(discord.User(id="117678528220233731"), "New suggestion recieved from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Suggestion: `" + message.content[len(self.command_prefix + "suggest "):].strip() + "`")
+        await self.send_message(discord.User(id="150719058868699137"), "New suggestion recieved from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Suggestion: `" + message.content[len(self.command_prefix + "suggest "):].strip() + "`")
+        await self.send_message(discord.User(id="139866356890861569"), "New suggestion recieved from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Suggestion: `" + message.content[len(self.command_prefix + "suggest "):].strip() + "`")
         await self.send_message(message.author, "You have sent a suggestion to the developers. Your suggstion that was sent was `" + message.content[len(self.command_prefix + "suggest "):].strip() + "`. You are not able to respond via the bot, a developer should send a message back to you shortly via PM.")
         
     async def cmd_wakemeup(self, channel):
         await self.send_message(channel, "Wake me up!")
         await asyncio.sleep(1)
         await self.send_message(channel, "Wake me up inside!")
-
-    async def cmd_fuckherrightinthepussy(self):
-        return Response("https://www.youtube.com/watch?v=x7-nzLx4Oa0")
-
+        
     async def cmd_memes(self):
         return Response(memes)
 
