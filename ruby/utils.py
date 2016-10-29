@@ -1,7 +1,6 @@
 import re
 import decimal
 import unicodedata
-import requests
 
 from .constants import DISCORD_MSG_CHAR_LIMIT
 
@@ -30,14 +29,6 @@ def write_file(filename, contents):
         for item in contents:
             f.write(str(item))
             f.write("\n")
-
-def download_file(url, destination):
-    req = requests.get(url)
-    file = open(destination, "wb")
-    for chunk in req.iter_content(100000):
-        file.write(chunk)
-    file.close()
-
 
 def extract_user_id(argument):
     match = _USER_ID_MATCH.match(argument.replace("!", ""))
