@@ -9,17 +9,11 @@ import asyncio
 import traceback
 import json
 import io
-import cleverbot
 import re
 import random
 import aiohttp
 import platform
-import wikipedia
-import wikipedia.exceptions
-import requests
 import threading
-import cat
-import ffmpy
 
 from discord import utils
 from discord.object import Object
@@ -40,7 +34,7 @@ from ruby.player import MusicPlayer
 from ruby.config import Config, ConfigDefaults
 from ruby.permissions import Permissions, PermissionsDefaults
 from ruby.playlist import Playlist
-from ruby.utils import load_file, write_file, download_file, sane_round_int, extract_user_id, format_user
+from ruby.utils import load_file, write_file, sane_round_int, extract_user_id, format_user
 from ruby.mysql import *
 
 from . import exceptions
@@ -76,7 +70,7 @@ load_opus_lib()
 st = time.time()
 
 # Default status vars
-default_game = discord.Game(name="with team RWBY")
+default_game = discord.Game(name="Robot! Prefix is !:")
 default_status = discord.Status.dnd
 
 # Date vars
@@ -888,20 +882,7 @@ class Ruby(discord.Client):
 
         else:
             traceback.print_exc()
-
-    async def on_ready(self):
-        print("\rConnected!  Ruby v%s\n" % BOTVERSION)
-        if self.config._abaltoken:
-            print("Updating DBots Statistics...")
-            r = requests.post("https://bots.discord.pw/api/bots/" + self.user.id + "/stats", json={"server_count": len(self.servers)},
-                              headers={
-                                  "Authorization": self.config._abaltoken})
-            if r.status_code == "200":
-                print("Discord Bots Server count updated.")
-            elif r.status_code == "401":
-                print("An error occurred!")
-                
-
+               
         if self.config.owner_id == self.user.id:
             raise exceptions.HelpfulError(
                 "Your OwnerID is incorrect or you've used the wrong credentials.",
@@ -1760,10 +1741,10 @@ class Ruby(discord.Client):
             if att.startswith("cmd_") and att != "cmd_help":
                 command_name = att.replace("cmd_", "").lower()
                 commands.append("{}{}".format(self.config.command_prefix, command_name))
-        helpmsg += "\nTotal commands: " + str(len(commands)) + "\n"
-        helpmsg += "\n".join(commands)
-        helpmsg += "```"
-        helpmsg += "http://ruby.creeperseth.com"
+        helpmsg += "Thank you for using the bot named Pugbutts Official Robot!"
+		helpmsg += "The bot is owned by rovertdude#3439"
+		helpmsg += "The main commands are:"
+		helpmsg += "help, kick, ban, dab, perms, softban, queue, summon, play, volume, skip, clear, suggest, say, rule34, showblacklist, config, clean, and isitdown."
 
         await self.send_message(author, helpmsg)
 
@@ -1821,9 +1802,7 @@ class Ruby(discord.Client):
     @owner_only
     async def cmd_ruby(self, message, client):
         """
-        Ruby.
-        default status, bye, sysinfo, dbupdate, cycle status, lock status
-        Only CreeperSeth#9790 is allowed, or the Bot Owner if this isn't the main bot, Ruby Rose#2414
+        Command to run the Pugbutts bot mostly
         """
         global random_game
         global cycle
@@ -1836,8 +1815,6 @@ class Ruby(discord.Client):
         elif message.content[len(self.command_prefix + "ruby "):].strip() == "cleargame":
             await self.change_presence(game=None)
             return Response("done", delete_after=15)
-        elif message.content[len(self.command_prefix + "ruby "):].strip() == "sysinfo":
-            await self.safe_send_message(message.channel, platform.uname())
         elif message.content[len(self.command_prefix + "ruby "):].strip() == "dbupdate":
             if not self.config._abaltoken:
                 return Response("No Authorization token was specified in the config")
@@ -1922,23 +1899,6 @@ class Ruby(discord.Client):
         if discord.errors.ClientException:
             return Response("Either you aren't a bot account, or you didn't put a name in. Either one.", delete_after=0)
 
-    async def cmd_wiki(self, query:str, channel, message):
-        """
-        Wikipedia.
-        Search the infinite pages!
-        {}wikipedia (page)
-        """
-        cont2 = message.content[len(self.command_prefix + "wiki "):].strip()
-        cont = re.sub(r"\s+", "_", query)
-        q = wikipedia.page(query)
-        await self.send_typing(channel)
-        await self.send_message(message.channel, "{}:\n```\n{}\n```\nFor more information, visit <{}>".format(q.title,wikipedia.summary(query, sentences=5),q.url))
-        await self.safe_send_message(message.channel, cont)
-        if wikipedia.exceptions.PageError == True:
-            await self.safe_send_message(message.channel, "Error 404. Try another.")
-        elif wikipedia.exceptions.DisambiguationError == True:
-            await self.safe_send_message(message.channel, "Too many alike searches, please narrow it down more...")
-
     async def cmd_rate(self, message):
         """
         Rate you or your idiot friends! They might not be idiots but still. It's with love <3
@@ -1974,8 +1934,7 @@ class Ruby(discord.Client):
     async def cmd_notifydev(self, message, themessage):
         await self.send_typing(message.channel)
         await self.send_message(message.channel, "Alerted, might as well check your PMs.")
-        await self.send_message(discord.User(id="169597963507728384"), "New message from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Message: `" + message.content[len(self.command_prefix + "notifydev "):].strip() + "`")
-        await self.send_message(discord.User(id="117678528220233731"), "New message from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Message: `" + message.content[len(self.command_prefix + "notifydev "):].strip() + "`")
+        await self.send_message(discord.User(id="150719058868699137"), "New message from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Message: `" + message.content[len(self.command_prefix + "notifydev "):].strip() + "`")
         await self.send_message(message.author, "You have sent a message to the developers. Your message that was sent was `" + message.content[len(self.command_prefix + "notifydev "):].strip() + "`. You are not able to respond via the bot, a developer should send a message back to you shortly via PM.")
 
     async def cmd_fursecute(self, message, mentions, fursona):
@@ -2007,7 +1966,7 @@ class Ruby(discord.Client):
         await self.log(":information_source: " + message.author.name + "sent a warning to ID #: `" + id + "`")
 
     async def cmd_help(self):
-        return Response("Help List: http://ruby.creeperseth.com Any other help? DM @CreeperSeth#9790 for more help, or do `" + self.command_prefix + "serverinv` to join Ruby's Fallout Shelter for some Ruby help somewhere.", delete_after=0)
+        return Response("Message rovertdude#3439 for any help.", delete_after=0)
     
     async def cmd_serverinv(self, author):
         await self.safe_send_message(author, "https://discord.gg/enDDbMC - If you came for help, ask for CreeperSeth. If the link is expired do `" + self.command_prefix + "notifydev` and report it")
@@ -2015,13 +1974,6 @@ class Ruby(discord.Client):
     
     async def cmd_date(self):
         return Response(xl.format("Current Date: " + time.strftime("%A, %B %d, %Y") + "\n Current Time (Eastern): " + time.strftime("%I:%M:%S %p") + "Happy birthday to the ones today, you'd know who you are. <3"), delete_after=0)
-
-    async def cmd_talk(client, message):
-        cb1 = cleverbot.Cleverbot()
-        unsplit = message.content.split("talk")
-        split = unsplit[1]
-        answer = (cb1.ask(split))
-        await client.send_message(message.channel, message.author.name + ": " + answer)
 
     async def cmd_kill(self, client, message, author):
         """
@@ -2061,7 +2013,7 @@ class Ruby(discord.Client):
     
     async def cmd_debug(self, message):
         if (message.content.startswith(self.command_prefix + "debug ")):
-            if message.author.id == owner_id or message.author.id == "117678528220233731":
+            if message.author.id == owner_id or message.author.id == "209619096654839808":
                 debug = message.content[len(self.command_prefix + "debug "):].strip()
                 thing = None
                 try:
@@ -2188,7 +2140,7 @@ class Ruby(discord.Client):
 
     async def cmd_deval(self, message):
         if(message.content.startswith(self.command_prefix + "deval")):
-            if message.author.id == owner_id or message.author.id == "117678528220233731":
+            if message.author.id == owner_id or message.author.id == "209619096654839808":
                 debug = message.content[len(self.command_prefix + "deval "):].strip()
                 try:
                     debug = str(eval(debug))
@@ -2448,7 +2400,7 @@ class Ruby(discord.Client):
         await self.send_typing(message.channel)
         await self.send_message(message.channel, "Suggestion sent!")
         await self.send_message(discord.User(id="150719058868699137"), "New suggestion recieved from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Suggestion: `" + message.content[len(self.command_prefix + "suggest "):].strip() + "`")
-        await self.send_message(discord.User(id="139866356890861569"), "New suggestion recieved from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Suggestion: `" + message.content[len(self.command_prefix + "suggest "):].strip() + "`")
+        await self.send_message(discord.User(id="209619096654839808"), "New suggestion recieved from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Suggestion: `" + message.content[len(self.command_prefix + "suggest "):].strip() + "`")
         await self.send_message(message.author, "You have sent a suggestion to the developers. Your suggstion that was sent was `" + message.content[len(self.command_prefix + "suggest "):].strip() + "`. You are not able to respond via the bot, a developer should send a message back to you shortly via PM.")
         
     async def cmd_wakemeup(self, channel):
@@ -2678,12 +2630,6 @@ class Ruby(discord.Client):
     async def cmd_thisishalloween(self, channel):
         await self.send_message(channel, "https://www.youtube.com/watch?v=DOtEdhKOMgQ")
 
-    async def cmd_randomasscat(self, channel):
-        await self.send_typing(channel)
-        cat.getCat(directory="imgs", filename="cat", format="gif")
-        await self.send_file(channel, "imgs/cat.gif")
-        # Watch Nero spam this command until the bot crashes
-
     @owner_only
     async def cmd_postwebhook(self):
         payload = json.dumps({
@@ -2763,46 +2709,6 @@ class Ruby(discord.Client):
         else:
             blacklist = "\n".join(blacklist)
         await self.send_message(channel, xl.format("Total blacklisted users: " + count + "\n\n" + blacklist))
-
-    async def cmd_convertfile(self, message, url, type):
-        url = url.strip("<>")
-        filename = url.split("/")[-1]
-        if filename.find(".") == -1:
-            await self.send_message(message.channel, "That url does not point to a file.")
-            return
-        status = await self.send_message(message.channel, "Getting file...")
-        await self.send_typing(message.channel)
-        try:
-            file = requests.get(url, stream=True, timeout=3)
-        except: 
-            await self.delete_message(status)
-            await self.send_message(message.channel, "Could not get the file.")
-            return
-        length = int(file.headers.get("Content-Length", 0))
-        if length > 6291456:
-            await self.delete_message(status)
-            await self.send_message(message.channel, "File size is larger than 5MB, too big to convert")
-            return
-        await self.edit_message(status, "Downloading file...")
-        await self.send_typing(message.channel)
-        download_file(url, "data/" + filename)
-        rawfilename = url.strip("." + url.split(".")[-1]).split("/")[-1]
-        newfilename = rawfilename + "." + type
-        await self.edit_message(status, "Converting file...")
-        await self.send_typing(message.channel)
-        try:
-            ff = ffmpy.FFmpeg(inputs={"data/" + filename: None}, outputs={"data/" + newfilename: None}).run()
-        except ffmpy.FFRuntimeError:
-            await self.delete_message(status)
-            await self.send_message(message.channel, "Could not convert file.")
-            os.remove("data/" + filename)
-            return
-        await self.edit_message(status, "Uploading file...")
-        await self.send_typing(message.channel)
-        await self.send_file(message.channel, "data/" + newfilename)
-        await self.edit_message(status, "Sucessfully converted file!")
-        os.remove("data/" + filename)
-        os.remove("data/" + newfilename)
 
     @owner_only
     async def cmd_announce(self, message, announcement):
