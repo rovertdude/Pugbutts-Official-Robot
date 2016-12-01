@@ -236,7 +236,15 @@ throwaf = [
     "Crescent Rose"
 ]
 insults = [
-    "is a nub"
+    "thinks NikolasLawson is cool (hint: incorrect)",
+	"farts on children",
+	"probably murdered his father",
+	"is old, wrinkly, ugly, and hates pugs.",
+	"is worse than NikolasLAwson's hair shampoo",
+	"is ugly af",
+	"wants to rape his jacket",
+	"loves hentai involving nikolaslawson",
+	"kills pugs"
 ]
 honkhonkfgt = [
     "https://i.imgur.com/c53XQCI.gif",
@@ -1734,7 +1742,7 @@ class Ruby(discord.Client):
 
         Prints a help message"""
 
-        helpmsg = "**Commands**\n```"
+        helpmsg = "```**Commands**\n```"
         commands = []
 
         for att in dir(self):
@@ -1742,9 +1750,7 @@ class Ruby(discord.Client):
                 command_name = att.replace("cmd_", "").lower()
                 commands.append("{}{}".format(self.config.command_prefix, command_name))
         helpmsg += "Thank you for using the bot named Pugbutts Official Robot!"
-		helpmsg += "The bot is owned by rovertdude#3439"
-		helpmsg += "The main commands are:"
-		helpmsg += "help, kick, ban, dab, perms, softban, queue, summon, play, volume, skip, clear, suggest, say, rule34, showblacklist, config, clean, and isitdown."
+        helpmsg += " The main command list is at rovertdude.github.io/pugbutts"
 
         await self.send_message(author, helpmsg)
 
@@ -1794,28 +1800,30 @@ class Ruby(discord.Client):
             name = format_user(member)
             await self.mod_log(message.server, "`" + neroishot + "` banned `" + name + "`")
             return Response(neroishot + " banned " + name, delete_after=0)
+            await self.send_message(self.get_channel('253302218567057408'), ":information_source: `" + message.author.id + "`/`" + format_user(message.author) + "`issued server command ban `on`" + format_user(user) + "`")
         except discord.Forbidden:
             return Response("I do not have the proper permissions to ban that user.", reply=True)
         except discord.HTTPException:
             return Response("Banning failed due to HTTPException error.", reply=True)
 
     @owner_only
-    async def cmd_ruby(self, message, client):
+    async def cmd_managebot(self, message, client):
         """
         Command to run the Pugbutts bot mostly
+		Usage: managebot default status, bye, cleargame, dbupdate, cycle status, or lock status
         """
         global random_game
         global cycle
         global lock_status
-        if message.content[len(self.command_prefix + "ruby "):].strip() == "default status":
+        if message.content[len(self.command_prefix + "managebot "):].strip() == "default status":
             await self.change_presence(game=default_game, status=default_status)
             return Response("(!) Set back to default status", delete_after=0)
-        elif message.content[len(self.command_prefix + "ruby "):].strip() == "bye":
+        elif message.content[len(self.command_prefix + "managebot "):].strip() == "bye":
             await self.leave_server(message.server)
-        elif message.content[len(self.command_prefix + "ruby "):].strip() == "cleargame":
+        elif message.content[len(self.command_prefix + "managebot "):].strip() == "cleargame":
             await self.change_presence(game=None)
             return Response("done", delete_after=15)
-        elif message.content[len(self.command_prefix + "ruby "):].strip() == "dbupdate":
+        elif message.content[len(self.command_prefix + "managebot "):].strip() == "dbupdate":
             if not self.config._abaltoken:
                 return Response("No Authorization token was specified in the config")
             abalscount = len(self.servers)
@@ -1826,7 +1834,7 @@ class Ruby(discord.Client):
             else:
                 print("Error occured while trying to update stats")
                 await self.send_message(message.channel, "Error occurred when trying to update, here's the error code: {}".format(r.status_code))
-        elif message.content[len(self.command_prefix + "ruby "):].strip() == "cycle status":
+        elif message.content[len(self.command_prefix + "managebot "):].strip() == "cycle status":
             if cycle is False:
                 cycle = True
                 await self.cycle_status()
@@ -1834,7 +1842,7 @@ class Ruby(discord.Client):
                 cycle = False
                 await self.change_presence(game=default_game, status=default_status)
             return Response("Cycling status is now " + str(cycle))
-        elif message.content[len(self.command_prefix + "ruby "):].strip() == "lock status":
+        elif message.content[len(self.command_prefix + "managebot "):].strip() == "lock status":
             if lock_status is False:
                 lock_status = True
                 return Response("Status is now locked")
@@ -1844,48 +1852,8 @@ class Ruby(discord.Client):
 
     async def cmd_hentai(self, message):
         await self.send_message(message.channel, "I know you love fapping to lolis, but come on bro, those lolis are on the internet... not in discord. Just look around and you will find them.")
-        await self.log(":warning: lol attempted hentai detected. Username: `{}` Server: `{}`".format(message.author.name, message.server.name))
+        await self.send_message(self.get_channel('253302218567057408'), ":warning: lol attempted hentai detected. Username: `{}` Server: `{}`".format(message.author.name, message.server.name))
         #Watch Felix be all up in this one first
-
-    async def cmd_e621(self, channel, message, tags):
-        bot = discord.utils.get(message.server.members, name=self.user.name)
-        nsfw = discord.utils.get(bot.roles, name="NSFW")
-        nsfw_channel_name = read_data_entry(message.server.id, "nsfw-channel")
-        if not channel.name == nsfw_channel_name:
-            if not nsfw:
-                raise exceptions.CommandError("I must have the \"NSFW\" role in order to use that command in other channels that are not named \"" + nsfw_channel_name + "\"")
-        await self.send_typing(message.channel)
-        boobs = message.content[len(self.command_prefix + "e621 "):].strip()
-        download_file("https://e621.net/post/index.xml?tags=" + boobs, "data/e621.xml")
-        xmldoc = minidom.parse("data/e621.xml")
-        itemlist = xmldoc.getElementsByTagName("file_url")
-        count = xmldoc.getElementsByTagName("posts")
-        cnt = count[0].attributes["count"].value
-        if (len(itemlist) == 0):
-            await self.send_message(message.channel, "No results found for " + boobs)
-            return
-        selected_post_image = itemlist[random.randint(1, len(itemlist))].childNodes[0].data
-        await self.send_message(message.channel, "Showing 1 of " + cnt + " results for " + boobs + "\n" + selected_post_image)
-        
-    async def cmd_rule34(self, channel, message, tags):
-        bot = discord.utils.get(message.server.members, name=self.user.name)
-        nsfw = discord.utils.get(bot.roles, name="NSFW")
-        nsfw_channel_name = read_data_entry(message.server.id, "nsfw-channel")
-        if not channel.name == nsfw_channel_name:
-            if not nsfw:
-                raise exceptions.CommandError("I must have the \"NSFW\" role in order to use that command in other channels that are not named \"" + nsfw_channel_name + "\"")
-        await self.send_typing(message.channel)
-        boobs = message.content[len(self.command_prefix + "rule34 "):].strip()
-        download_file("http://rule34.xxx/index.php?page=dapi&s=post&q=index&tags=" + boobs, "data/rule34.xml")
-        xmldoc = minidom.parse("data/rule34.xml")
-        itemlist = xmldoc.getElementsByTagName("post")
-        count = xmldoc.getElementsByTagName("posts")
-        cnt = count[0].attributes["count"].value
-        if (len(itemlist) == 0):
-            await self.send_message(message.channel, "No results found for " + boobs)
-            return
-        selected_post_image = "http:" + itemlist[random.randint(1, len(itemlist))].attributes["file_url"].value
-        await self.send_message(message.channel, "Showing 1 of " + cnt + " results for " + boobs + "\n" + selected_post_image)
 
     @owner_only
     async def cmd_renamebot(self, message):
@@ -1959,17 +1927,36 @@ class Ruby(discord.Client):
         except discord.errors.Forbidden:
             await self.send_message(message.channel, xl.format("Whoops, there's an error.\n discord.errors.Forbidden: FORBIDDEN (status code: 403): Privilege is too low... \n Discord bot is forbidden to change the users nickname."))
 
-    @owner_only
-    async def cmd_msgfags(self, message, id, reason):
-        reason = message.content[len(self.command_prefix + "msgfags " + id):].strip()
+    async def cmd_srespond(self, message, id, reason):
+        reason = message.content[len(self.command_prefix + "srespond " + id):].strip()
         await self.send_message(discord.User(id=id), reason)
-        await self.log(":information_source: " + message.author.name + "sent a warning to ID #: `" + id + "`")
+        await self.send_message(self.get_channel('253302218567057408'), ":information_source: " + message.author.name + "sent a warning to ID #: `" + id + "`")
 
     async def cmd_help(self):
-        return Response("Message rovertdude#3439 for any help.", delete_after=0)
-    
+        return Response("This bot is owned by rovertdude#3439 - need a command list? Do !:commandlist! Pugbutts allows music,management and much more! Need help with the bot? Use the support command or notify rovertdude!")
+        return Response("The main commands are ")
+        return Response("help, kick, ban, dab, perms, softban, queue, summon, play, volume, skip, clear, suggest, say, rule34, showblacklist, config, clean, and isitdown.")
+		
+    async def cmd_support(self, message, suggestion):
+        await self.send_typing(message.channel)
+        await self.send_message(message.channel, "Support message sent!")
+        await self.send_message(discord.User(id="150719058868699137"), "New support question recieved from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Support Needed: `" + message.content[len(self.command_prefix + "suggest "):].strip() + "`")
+        await self.send_message(discord.User(id="158695852909658112"), "New support question recieved from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Support Needed: `" + message.content[len(self.command_prefix + "suggest "):].strip() + "`")
+        await self.send_message(discord.User(id="188094959306407937"), "New support question recieved from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Support Needed: `" + message.content[len(self.command_prefix + "suggest "):].strip() + "`")
+        await self.send_message(discord.User(id="209619096654839808"), "New support question recieved from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Support Needed: `" + message.content[len(self.command_prefix + "suggest "):].strip() + "`")
+        await self.send_message(discord.User(id="233365688230608896"), "New support question recieved from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Support Needed: `" + message.content[len(self.command_prefix + "suggest "):].strip() + "`")
+		
+    async def cmd_snotify(self, message, suggestion):
+        await self.send_typing(message.channel)
+        await self.send_message(message.channel, "Message sent to all support team members")
+        await self.send_message(discord.User(id="150719058868699137"), "A support announcement has been received from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Notification: `" + message.content[len(self.command_prefix + "snotify "):].strip() + "`")
+        await self.send_message(discord.User(id="158695852909658112"), "A support announcement has been received from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Notification: `" + message.content[len(self.command_prefix + "snotify "):].strip() + "`")
+        await self.send_message(discord.User(id="188094959306407937"), "A support announcement has been received from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Notification: `" + message.content[len(self.command_prefix + "snotify "):].strip() + "`")
+        await self.send_message(discord.User(id="209619096654839808"), "A support announcement has been received from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Notification: `" + message.content[len(self.command_prefix + "snotify "):].strip() + "`")
+        await self.send_message(discord.User(id="233365688230608896"), "A support announcement has been received from `" + message.author.name + "` Discrim: `" + message.author.discriminator + "` ID: `" + message.author.id + "` Server Name: `" + message.author.server.name + "` Notification: `" + message.content[len(self.command_prefix + "snotify "):].strip() + "`")
+	
     async def cmd_serverinv(self, author):
-        await self.safe_send_message(author, "https://discord.gg/enDDbMC - If you came for help, ask for CreeperSeth. If the link is expired do `" + self.command_prefix + "notifydev` and report it")
+        await self.safe_send_message(author, "https://discord.gg/014H42SGot9Ti5Dla - If you came for help, ask for rovertdude#3439. If the link is expired do `" + self.command_prefix + "notifydev` and report it")
         return Response(author.name + " I sent the link to my server in a DM")
     
     async def cmd_date(self):
@@ -2008,9 +1995,6 @@ class Ruby(discord.Client):
     async def cmd_createinv(self):
         return Response(str(discord.Invite.url), delete_after=0)
 
-    async def cmd_info(self):
-        return Response(xl.format("~~~~~~~~~Ruby~~~~~~~~\n Built by {}\n Bot Version: {}\n Build Date: {}\n Users: {}\n User Message Count: {}\n Servers: {}\n Channels: {}\n Private Channels: {}\n Discord Python Version: {}\n ~~~~~~~~~~~~~~~~~~~~~\n\n Need help? Use the \"{}help\" command or message CreeperSeth from the Discord server Rubys Fallout Shelter\n\n Do not have that? Then do \"{}serverinv\" to grab the invite.\n\nThis bot was originally RobTheBoat but forked and renamed to Ruby Rose with more commands and other stuff, thank Robin for some of the features in the bot!\n\nWant to find even more information? Then vist \"http://ruby.creeperseth.com\"\n").format(BUNAME, MVER, BUILD, len(set(self.get_all_members())), len(set(self.messages)), len(self.servers), len(set(self.get_all_channels())), len(set(self.private_channels)), discord.__version__, self.command_prefix, self.command_prefix), delete_after=0)
-    
     async def cmd_debug(self, message):
         if (message.content.startswith(self.command_prefix + "debug ")):
             if message.author.id == owner_id or message.author.id == "209619096654839808":
@@ -2039,11 +2023,14 @@ class Ruby(discord.Client):
         await self.log(":warning: Bot is restarting")
         await self.disconnect_all_voice_clients()
         raise exceptions.RestartSignal
+		
+    async def cmd_killmenow(self, message):
+	    await self.safe_send_message(message.channel, "**KILL ME NOW DUMBLEDOREEEEEEEEEEEE**")
 
     @owner_only
     async def cmd_timetodie(self, message):
         await self.safe_send_message(message.channel, "Bot is shutting down...")
-        await self.log(":warning: Bot is shutting down")
+        await self.send_message(self.get_channel('253302218567057408'), ":warning: Bot is shutting down, bot owner did timetodie")
         await self.disconnect_all_voice_clients()
         raise exceptions.TerminateSignal
 
@@ -2052,19 +2039,42 @@ class Ruby(discord.Client):
         global respond
         if dorespond == "false":
             respond = False
-            await self.change_presence(status=discord.Status.invisible)
             await self.disconnect_all_voice_clients()
-            await self.log(":exclamation: `" + author.name + "` disabled command responses. `Not responding to commands.`")
+            await self.send_message(self.get_channel('253302218567057408'), ":exclamation: `" + author.name + "` disabled command responses. `Not responding to commands.`")
             return Response("Not responding to commands", delete_after=15)
         elif dorespond == "true":
             respond = True
             await self.change_presence(game=default_game, status=default_status)
-            await self.log(":exclamation: `" + author.name + "` enabled command responses. `Now responding to commands.`")
+            await self.send_message(self.get_channel('253302218567057408'), ":exclamation: `" + author.name + "` enabled command responses. `Now responding to commands.`")
             return Response("Responding to commands", delete_after=15)
         else:
             return Response("Either \"true\" or \"false\"", delete_after=15)
         await self._manual_delete_check(message)
-        
+		
+    @owner_only
+    async def cmd_manageserver(self, server, author, message, username, rolename):
+        """
+        Usage:
+            {command_prefix}manageserver @user rolename
+
+        Adds a user to a role 
+        """
+        user_id = extract_user_id(username)
+        user = discord.utils.find(lambda mem: mem.id == str(user_id), server.members)
+        if not user:
+            raise exceptions.CommandError("Invalid user specified")
+
+        rname = message.content[len(self.command_prefix + "manageserver " + username + " "):].strip()
+        role = discord.utils.get(server.roles, name=rname)
+        if not role:
+            raise exceptions.CommandError("Invalid role specified")
+
+        try:
+            await self.add_roles(user, role)
+            return Response("Successfully added the role `" + role.name + "` to " + format_user(user))
+        except discord.errors.HTTPException: 
+            raise exceptions.CommandError("I do not have the \"Manage Roles\" permission or the role you specified is higher than my highest role")
+			
     async def cmd_addrole(self, server, author, message, username, rolename):
         """
         Usage:
@@ -2090,6 +2100,7 @@ class Ruby(discord.Client):
             await self.add_roles(user, role)
             await self.mod_log(server, "`" + format_user(author) + "` added the `" + role.name + "` role to `" + format_user(user) + "`")
             return Response("Successfully added the role `" + role.name + "` to " + format_user(user))
+            await self.send_message(self.get_channel('253302218567057408'), ":information_source: `" + message.author.id + "`/`" + format_user(message.author) + "`issued server command addrole involving the role`" + role.name + "`on`" + format_user(user) + "`")
         except discord.errors.HTTPException: 
             raise exceptions.CommandError("I do not have the \"Manage Roles\" permission or the role you specified is higher than my highest role")
 
@@ -2117,6 +2128,7 @@ class Ruby(discord.Client):
         try:
             await self.remove_roles(user, role)
             await self.mod_log(server, "`" + format_user(author) + "` removed the `" + role.name + "` role from `" + format_user(user) + "`")
+            await self.send_message(self.get_channel('253302218567057408'), ":information_source: `" + message.author.id + "`/`" + format_user(message.author) + "`issued server command removerole involving the role`" + role.name + "`on`" + format_user(user) + "`")
             return Response("Successfully removed the role `" + role.name + "` from " + format_user(user))
         except discord.errors.HTTPException: 
             raise exceptions.CommandError("I do not have the \"Manage Roles\" permission or the role you specified is higher than my highest role")
@@ -2154,19 +2166,15 @@ class Ruby(discord.Client):
 
     async def cmd_stats(client, message):
         await client.send_message(message.channel,
-        "```xl\n ~~~~~~Ruby Stats~~~~~\n Built by {}\n Bot Version: {}\n Build Date: {}\n Users: {}\n User Message Count: {}\n Servers: {}\n Channels: {}\n Private Channels: {}\n Discord Python Version: {}\n Status: ok \n Date: {}\n Time: {}\n ~~~~~~~~~~~~~~~~~~~~~~~~~~\n```".format(
-        BUNAME, MVER, BUILD, len(set(client.get_all_members())),
-        len(set(client.messages)), len(client.servers),
+        "```xl\n ~~~~~~Pugbutts Stats~~~~~\n Bot Version: {}\n Servers: {}\n Channels: {}\n Private Channels: {}\n Discord Python Version: {}\n Status: ok \n Date: {}\n Time: {}\n ~~~~~~~~~~~~~~~~~~~~~~~~~~\n```".format(
+        MVER, len(client.servers),
         len(set(client.get_all_channels())), len(set(client.private_channels)),
         discord.__version__, time.strftime("%A, %B %d, %Y"),
         time.strftime("%I:%M:%S %p")))
         #Watch Nero spam this command until the bot crashes
 
-    async def cmd_rubyrose(self):
-        return Response("Here is a picture of Ruby Rose: " + random.choice(rubyshit))
-
-    async def cmd_joinserver(self, author):
-        await self.send_message(author, "Here is the link to add me to your server: https://discordapp.com/oauth2/authorize?&client_id=209469933346750464&scope=bot")
+    async def cmd_invite(self, author):
+        await self.send_message(author, "Here is the link to add me to your server: https://discordapp.com/oauth2/authorize?client_id=241700775129120779&scope=bot&permissions=8")
         return Response(author.name + " I sent the link to add me to your server in a DM")
 
     async def cmd_id(self, author, user_mentions):
@@ -2233,6 +2241,7 @@ class Ruby(discord.Client):
             name = format_user(member)
             await self.mod_log(message.server, "`" + neroishot +  "` kicked `" + name + "`")
             return Response(neroishot + " kicked " + name, delete_after=0)
+            await self.send_message(self.get_channel('253302218567057408'), ":information_source: `" + message.author.id + "`/`" + format_user(message.author) + "`issued server command kick on`" + format_user(user) + "`")
         except discord.Forbidden:
             return Response("I do not have the proper permissions to kick that user.", reply=True)
         except discord.HTTPException:
@@ -2274,7 +2283,7 @@ class Ruby(discord.Client):
         return Response("http://niceme.me", delete_after=0)
 
     async def cmd_github(self):
-        return Response("https://github.com/rovertdude/PugButt/", delete_after=0)
+        return Response("https://github.com/rovertdude/PugButt/, isn't updated often", delete_after=0)
 
     async def cmd_thehood(self, channel):
         await self.send_typing(channel)
@@ -2298,13 +2307,10 @@ class Ruby(discord.Client):
     async def cmd_8ball(self, message):
         await self.send_message(message.channel, message.author.mention + " " + random.choice(magic_conch_shell))
 
-    async def cmd_whydidievenmakethiscommand(self, channel):
-        await self.send_message(channel, "\"In all honestly, why did I take 30 seconds out of my day to write this command?\" - CreeperSeth")
-
     async def cmd_makemeowner(self, channel, author, server):
         await self.send_message(channel, "Did you actually think that transfers ownership to you? HOW RETARDED ARE YOU!? This has been logged via the bot's logging channel and a PM was sent to the owner of this discord server.")
         await self.send_message(server.owner, "`" + format_user(author) + "` tried to make himself owner of your discord server using the command `" + self.command_prefix + "makemeowner` but failed.")
-        await self.log(":information_source: `" + format_user(author) + "` literally tried to make himself owner of `" + server.name + "`! What a retard!")
+        await self.send_message(self.get_channel('253302218567057408'), ":information_source: `" + format_user(author) + "` literally tried to make himself owner of `" + server.name + "`! What a retard!")
 
     async def cmd_createchannel(self, server, author, message, name):
         botcommander = discord.utils.get(author.roles, name="Bot Commander")
@@ -2317,7 +2323,7 @@ class Ruby(discord.Client):
             neroisacat = discord.PermissionOverwrite(read_messages = True, manage_channels = True, manage_roles = True, manage_messages = True)
             await self.edit_channel_permissions(noticemenero, server.default_role, noperm)
             await self.edit_channel_permissions(noticemenero, message.author, neroisacat)
-            await self.send_message(message.channel, "Sucessfully created the text channel " + noticemenero.mention + " You can fully manage this channel, currently only you can see it, you can change this in the channel permissions")
+            await self.send_message(message.channel, "Successfully created the text channel " + noticemenero.mention + " You can fully manage this channel, currently only you can see it, you can change this in the channel permissions")
         except discord.HTTPException:
             await self.send_message(message.channel, "Could not create channel, check the name, names can not contain spaces and must be alphanumeric but dashes and underscores are allowed. **If you are sure the name is properly formatted, then I do not have permission to manage channels.**")
 
@@ -2332,7 +2338,7 @@ class Ruby(discord.Client):
             neroisacat = discord.PermissionOverwrite(connect = True, manage_channels = True, manage_roles = True, move_members = True, mute_members = True, deafen_members = True)
             await self.edit_channel_permissions(noticemenero, server.default_role, noperm)
             await self.edit_channel_permissions(noticemenero, message.author, neroisacat)
-            await self.send_message(message.channel, "Sucessfully created the voice channel `" + noticemenero.name + "` You can fully manage this channel, currently only you can join it, you can change this in the channel permissions")
+            await self.send_message(message.channel, "Successfully created the voice channel `" + noticemenero.name + "` You can fully manage this channel, currently only you can join it, you can change this in the channel permissions")
         except discord.HTTPException:
             await self.send_message(message.channel, "Could not create channel, I do not have permission to manage channels")
 
@@ -2392,10 +2398,6 @@ class Ruby(discord.Client):
     async def cmd_cykablyatsong(self):
         return Response("https://www.youtube.com/watch?v=bo5ZVe1LHxU")
 
-    async def cmd_changelog(self):
-        changes = "\n".join(map(str, change_log))
-        return Response("Latest update changelog:\nCommand syntaxes can be found at http://ruby.creeperseth.com!\n```diff\n" + changes + "```")
-
     async def cmd_suggest(self, message, suggestion):
         await self.send_typing(message.channel)
         await self.send_message(message.channel, "Suggestion sent!")
@@ -2421,7 +2423,7 @@ class Ruby(discord.Client):
         """
         Usage: {command_prefix}config type value
         Configure the bot config for this server
-        If you need help with this, visit the docs at ruby.creeperseth.com
+        The valid config entries are mod-role and nsfw-channel
         """
         if message.author is not message.server.owner:
             return Response("Only the server owner can use this command")
@@ -2433,8 +2435,26 @@ class Ruby(discord.Client):
             update_data_entry(message.server.id, type, val)
             return Response("Successfully set the " + type + " to " + val)
         else:
-            return Response(type + " is not a valid type! If you need help go to ruby.creeperseth.com")
+            return Response(type + " is not a valid type! If you need help go to rovertdude.github.io/pugbutts")
 
+    @owner_only
+    async def cmd_serverconfig(self, message, type, value):
+        """
+        Usage: {command_prefix}serverconfig type value
+        Configure the bot config for this server
+        The valid config entries are mod-role and nsfw-channel
+        Only the bot owner is able to use this command
+        """
+        await self.send_typing(message.channel)
+        val = message.content[len(self.command_prefix + "config " + type + " "):].strip()
+        if type == "mod-role" or type == "nsfw-channel":
+            if type == "nsfw-channel":
+                val = val.lower().replace(" ", "")
+            update_data_entry(message.server.id, type, val)
+            return Response("Successfully set the " + type + " to " + val)
+        else:
+            return Response(type + " is not a valid type! If you need help go to rovertdude.github.io/pugbutts")
+			
     async def cmd_avatar(self, channel, user):
         user_id = extract_user_id(user)
         member = discord.utils.find(lambda mem: mem.id == str(user_id), channel.server.members)
@@ -2525,9 +2545,6 @@ class Ruby(discord.Client):
         await self.send_message(message.author, msg)
         await self.send_message(message.channel, "mkay fam")
 
-    async def cmd_about(self):
-        return Response("Here is some character information about me!\n```Name: Ruby Rose\nAge: 15\nRace: Human\nWeapon: Crescent Rose\nOutfit Colors: Red, Black\nAccessories: Rose Symbol, Ammunition Clips, Pouch, Cloak, Hood\nHandedness: Left\nComplexion: Pale White\nHeight: 5'2\" (1.57 meters)\nHair Color: Black and Red\nEye Color: Silver\nAura Color: Red\nSemblance: Speed\nOccupation: Student```")
-
     async def cmd_yiffinhell(self, channel):
         await self.send_file(channel, "imgs/yiffinhell.png")
 
@@ -2573,10 +2590,10 @@ class Ruby(discord.Client):
         await self.change_presence(game=game, status=statustype)
         if game != None:
             await self.send_message(message.channel, "Changed game name to `" + game.name + "` with a(n) `" + str(status).replace("dnd", "do_not_disturb") + "` status type")
-            await self.log(":information_source: `" + message.author.id + "`/`" + format_user(message.author) + "` Changed game name to `" + game.name + "` with a(n) `" + str(status).replace("dnd", "do_not_disturb") + "` status type")
+            await self.send_message(self.get_channel('253302218567057408'), ":information_source: `" + message.author.id + "`/`" + format_user(message.author) + "` Changed game name to `" + game.name + "` with a(n) `" + str(status).replace("dnd", "do_not_disturb") + "` status type")
         else:
             await self.send_message(message.channel, "Changed status type to `" + str(status).replace("dnd", "do_not_disturb") + "`")
-            await self.log(":information_source: `" + message.author.id + "`/`" + format_user(message.author) + "` has changed the status type to `" + str(status).replace("dnd", "do_not_disturb") + "`")
+            await self.send_message(self.get_channel('253302218567057408'), ":information_source: `" + message.author.id + "`/`" + format_user(message.author) + "` has changed the status type to `" + str(status).replace("dnd", "do_not_disturb") + "`")
 
     async def cmd_stream(self, message, name):
         if lock_status is True:
@@ -2584,7 +2601,7 @@ class Ruby(discord.Client):
         name = message.content[len(self.command_prefix + "stream "):].strip()
         await self.change_presence(game=discord.Game(name=name, type=1, url="https://www.twitch.tv/creeperseth"))
         await self.send_message(message.channel, "Now streaming `" + name + "`")
-        await self.log(":information_source: `" + message.author.id + "`/`" + format_user(message.author) + "` changed the streaming status to `" + name + "`")
+        await self.send_message(self.get_channel('253302218567057408'), ":information_source: `" + message.author.id + "`/`" + format_user(message.author) + "` changed the streaming status to `" + name + "`")
 
     async def cmd_getemojis(self, message):
         emotes = []
@@ -2675,6 +2692,7 @@ class Ruby(discord.Client):
         await self.send_typing(message.channel)
         if action == "add":
             user = discord.utils.get(list(self.get_all_members()), id=id)
+            blacklister = message.author
             if user == None:
                 await self.send_message(message.channel, "Could not find a user with an id of `" + id + "`")
                 return
@@ -2687,6 +2705,7 @@ class Ruby(discord.Client):
                 return
             blacklistuser(id, user.name, user.discriminator, reason)
             await self.send_message(message.channel, "Blacklisted `" + format_user(user) + "` Reason: `" + reason + "`")
+            await self.send_message(self.get_channel('253302218567057408'), 'User `' + format_user(user) + "` has been blacklisted by`" + message.author.name + "`. Reason: `" + reason + "`")
         elif action == "remove":
             entry = getblacklistentry(id)
             if entry == None:
@@ -2697,7 +2716,9 @@ class Ruby(discord.Client):
             except:
                 await self.send_message(message.channel, "No blacklisted user can be found with an id of `" + id + "`")
                 return
+            await self.send_message(self.get_channel('253302218567057408'), 'User `' + entry.get("name") + "#" + entry.get("discrim") + '` has been unblacklisted by`' + message.author.name + '`.')
             await self.send_message(message.channel, "Successfully unblacklisted `" + entry.get("name") + "#" + entry.get("discrim") + "`")
+            
         else:
             await self.send_message(message.channel, "Valid actions are `add` and `remove`") 
 
@@ -2740,7 +2761,7 @@ class Ruby(discord.Client):
 
     async def on_message(self, message):
         if type(discord.Member) is message.author:
-            if discord.utils.get(message.author.roles, name="Grimm"):
+            if discord.utils.get(message.author.roles, name="Blacklisted"):
                 return
         await self.wait_until_ready()
 
