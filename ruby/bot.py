@@ -2640,7 +2640,7 @@ class Ruby(discord.Client):
         """
         if lock_status is True:
             await self.send_message(message.channel, "The status is currently locked")
-	    return
+	      return
         statustype = None
         game = None
         if status == "invisible" or status == "offline":
@@ -2665,7 +2665,7 @@ class Ruby(discord.Client):
     async def cmd_stream(self, message, name):
         if lock_status is True:
             await self.send_message(message.channel, "The status is currently locked")
-	    return
+	      return
         name = message.content[len(self.command_prefix + "stream "):].strip()
         await self.change_presence(game=discord.Game(name=name, type=1, url="https://www.twitch.tv/rovertpug"))
         await self.send_message(message.channel, "Now streaming `" + name + "`")
